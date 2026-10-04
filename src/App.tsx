@@ -62,6 +62,7 @@ function App() {
   const [rollFrame, setRollFrame] = useState(0)
   const [isSettled, setIsSettled] = useState(false)
   const [characterName, setCharacterName] = useState<CharacterName | null>(null)
+  const [classSurnameInfluence, setClassSurnameInfluence] = useState(false)
   const [history, setHistory] = useState<RollHistoryEntry[]>(loadHistory)
   const [historyPage, setHistoryPage] = useState(1)
   const historyRef = useRef(history)
@@ -162,7 +163,7 @@ function App() {
 
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       setResult(finalCharacter)
-      const name = generateFullName(finalCharacter.race, finalCharacter.gender)
+      const name = generateFullName(finalCharacter.race, finalCharacter.gender, { characterClass: finalCharacter.class, classInfluence: classSurnameInfluence })
       setCharacterName(name)
       recordSettledCharacter(finalCharacter, name)
       setRollFrame((frame) => frame + 1)
@@ -187,7 +188,7 @@ function App() {
         timerRef.current = null
         if (step === rouletteDelays.length - 1) {
           setResult(finalCharacter)
-          const name = generateFullName(finalCharacter.race, finalCharacter.gender)
+          const name = generateFullName(finalCharacter.race, finalCharacter.gender, { characterClass: finalCharacter.class, classInfluence: classSurnameInfluence })
           setCharacterName(name)
           recordSettledCharacter(finalCharacter, name)
           setRollFrame((frame) => frame + 1)
@@ -213,12 +214,12 @@ function App() {
 
   function rerollSurname() {
     if (!result || rolling || !characterName) return
-    setCurrentName({ ...characterName, surname: generateSurname(result.race) })
+    setCurrentName({ ...characterName, surname: generateSurname(result.race, { characterClass: result.class, classInfluence: classSurnameInfluence }) })
   }
 
   function rerollFullName() {
     if (!result || rolling) return
-    setCurrentName(generateFullName(result.race, result.gender))
+    setCurrentName(generateFullName(result.race, result.gender, { characterClass: result.class, classInfluence: classSurnameInfluence }))
   }
 
   const resultFactionClass = result
@@ -262,8 +263,8 @@ function App() {
       className="main-content"
       style={{ '--main-bg-image': `url("${MAIN_BACKGROUND_URL}")` } as CSSProperties}
     >
-    <div hidden={activeTool !== 'names'}><NameGeneratorPage /></div>
-    <div hidden={activeTool !== 'character'} className="character-tool">
+    <div className={activeTool === 'names' ? 'tool-view' : 'tool-view tool-view--inactive'} aria-hidden={activeTool !== 'names'} inert={activeTool !== 'names'}><NameGeneratorPage /></div>
+    <div className={`${activeTool === 'character' ? 'tool-view character-tool' : 'tool-view character-tool tool-view--inactive'}`} aria-hidden={activeTool !== 'character'} inert={activeTool !== 'character'}>
     <div className="app-shell">
       <div className="name-page-heading"><p className="section-kicker">WoW Forever Tools</p><h1>CHARACTER RANDOMIZER</h1><p>Choose your path and let fate decide.</p></div>
       <div className="generator-layout">
@@ -311,11 +312,8 @@ function App() {
             />
           </div>
 
-          <p className="selection-note">
-            {rolling
-              ? 'Selections are held while the wheel turns.'
-              : 'Faction, Race and Class options update to stay compatible. Leave choices Random to let fate decide.'}
-          </p>
+          <p className="selection-note">Faction, Race and Class options update to stay compatible. Leave choices Random to let fate decide.</p>
+          <label className={`class-influence-toggle${classSurnameInfluence ? ' class-influence-toggle--enabled' : ''}`}><input type="checkbox" checked={classSurnameInfluence} onChange={(event) => setClassSurnameInfluence(event.target.checked)} /><span className="class-influence-copy"><strong>Class-Influenced Surnames</strong><small>When enabled, 35% of surname rolls use the class pool.</small></span></label>
           <button
             className={`roll-button${rolling ? ' roll-button--rolling' : ''}`}
             type="button"
@@ -344,8 +342,8 @@ function App() {
               </div>
               <p className="result-class">{result.class}</p>
               <p className="result-gender">{result.gender}</p>
-              {!rolling && characterName && (
-                <div className="name-section" aria-label="Character name">
+              {characterName && (
+                <div className="name-section" aria-label="Character name" aria-hidden={rolling}>
                   <div className="name-divider" aria-hidden="true"><span>✦</span></div>
                   <p className="name-label">Character name</p>
                   <p className="character-name" aria-live="polite">
@@ -366,8 +364,8 @@ function App() {
               <p>When you are ready, cast the die and meet your next adventurer.</p>
             </div>
           )}
-          {result && !rolling && (
-            <div className="result-card-footer">
+          {result && (
+            <div className="result-card-footer" aria-hidden={rolling}>
               <span aria-hidden="true">✦</span>
               <span>One path among many</span>
               <span aria-hidden="true">✦</span>

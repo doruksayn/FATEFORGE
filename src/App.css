@@ -12,6 +12,7 @@
 }
 
 .main-content {
+  position: relative;
   display: flex;
   flex: 1 0 auto;
   flex-direction: column;
@@ -27,6 +28,16 @@
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: scroll, scroll, fixed;
+}
+
+.tool-view { width: 100%; }
+.tool-view--inactive {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .top-header {
@@ -354,6 +365,26 @@
   line-height: 1.55;
 }
 
+.class-influence-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 0.85rem 0 1rem;
+  padding: 0.7rem 0.75rem;
+  border: 1px solid #383632;
+  border-radius: 0.5rem;
+  background: rgb(12 14 16 / 55%);
+  color: #c7b98f;
+  cursor: pointer;
+}
+
+.class-influence-toggle input { width: 1rem; height: 1rem; accent-color: #b39453; }
+.class-influence-toggle--enabled { border-color: #8d7546; box-shadow: 0 0 0 1px rgb(195 163 95 / 17%), 0 0 14px rgb(195 163 95 / 11%); }
+.class-influence-copy { display: flex; flex-direction: column; gap: 0.15rem; }
+.class-influence-copy strong { font-size: 0.76rem; font-weight: 600; }
+.class-influence-copy small { color: #92908b; font-size: 0.68rem; line-height: 1.4; }
+.class-influence-toggle input:focus-visible { outline: 2px solid #d7bc7a; outline-offset: 3px; }
+
 .roll-button {
   display: flex;
   width: 100%;
@@ -590,6 +621,12 @@
 
 .result-card--rolling .character-result {
   animation: roulette-tick 180ms ease-out both;
+}
+
+.result-card--rolling .name-section,
+.result-card--rolling .result-card-footer {
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .result-card--settled .character-result {

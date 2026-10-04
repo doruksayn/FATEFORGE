@@ -16,6 +16,7 @@ export function NameGeneratorPage() {
   const [faction, setFaction] = useState<RandomOption<Character['faction']>>(RANDOM)
   const [character, setCharacter] = useState<Character | null>(null)
   const [name, setName] = useState<CharacterName | null>(null)
+  const [classSurnameInfluence, setClassSurnameInfluence] = useState(false)
   const [history, setHistory] = useState<RollHistoryEntry[]>(() => loadHistory(undefined, NAME_HISTORY_STORAGE_KEY))
   const [historyPage, setHistoryPage] = useState(1)
   const [currentHistoryId, setCurrentHistoryId] = useState<string | null>(null)
@@ -29,7 +30,7 @@ export function NameGeneratorPage() {
   function generate() {
     const result = generateCharacter({ ...filters, gender })
     if (!result) return
-    const nextName = generateFullName(result.race, result.gender)
+    const nextName = generateFullName(result.race, result.gender, { characterClass: result.class, classInfluence: classSurnameInfluence })
     const entry = createHistoryEntry(result, nextName)
     setCharacter(result)
     setName(nextName)
@@ -73,11 +74,11 @@ export function NameGeneratorPage() {
   }
 
   function rerollSurname() {
-    if (character && name) updateName({ ...name, surname: generateSurname(character.race) })
+    if (character && name) updateName({ ...name, surname: generateSurname(character.race, { characterClass: character.class, classInfluence: classSurnameInfluence }) })
   }
 
   function rerollFull() {
-    if (character) updateName(generateFullName(character.race, character.gender))
+    if (character) updateName(generateFullName(character.race, character.gender, { characterClass: character.class, classInfluence: classSurnameInfluence }))
   }
 
   function clearHistory() {
@@ -120,6 +121,7 @@ export function NameGeneratorPage() {
             <SelectionControl id="name-gender" label="Gender" value={gender} options={['Male', 'Female']} disabled={false} onChange={setGender} />
           </div>
           <p className="selection-note">Faction, Race and Class options update to stay compatible. Leave choices Random to let fate decide.</p>
+          <label className={`class-influence-toggle${classSurnameInfluence ? ' class-influence-toggle--enabled' : ''}`}><input type="checkbox" checked={classSurnameInfluence} onChange={(event) => setClassSurnameInfluence(event.target.checked)} /><span className="class-influence-copy"><strong>Class-Influenced Surnames</strong><small>When enabled, 35% of surname rolls use the class pool.</small></span></label>
           <button className="roll-button" type="button" onClick={generate}>✦ Generate Name</button>
         </section>
         <section className={`result-card name-result-card${character ? ` result-card--${character.faction.toLowerCase()}` : ' name-result-card--empty result-card--empty'}`} aria-labelledby="name-result-heading" aria-live="polite">
