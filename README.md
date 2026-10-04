@@ -7,11 +7,11 @@
   <p><strong>Two tools. A thousand possible adventures.</strong></p>
   <p>Roll a character or forge a name for your next WoW Forever adventure.</p>
 
-  <a href="https://doruksayn.github.io/FATEFORGE/">Open FATEFORGE</a>
+  <a href="https://doruksayn.github.io/FATEFORGE/">FATEFORGE</a>
   &nbsp;·&nbsp;
   <a href="https://github.com/doruksayn/FATEFORGE">View source</a>
 
-  <br /><br />
+  <br />
 
   <a href="https://github.com/doruksayn/FATEFORGE/actions/workflows/deploy.yml"><img src="https://github.com/doruksayn/FATEFORGE/actions/workflows/deploy.yml/badge.svg" alt="GitHub Pages deployment status" /></a>
   <img src="https://img.shields.io/badge/tools-2-9b8250" alt="Two tools" />
