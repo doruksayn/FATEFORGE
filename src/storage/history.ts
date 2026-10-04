@@ -2,6 +2,7 @@ import type { CharacterName } from '../logic/nameGenerator.ts'
 import { FACTIONS, GENDERS, RACES, CLASSES, type Character } from '../types/character.ts'
 
 export const HISTORY_STORAGE_KEY = 'wow-forever-roulette.history.v1'
+export const NAME_HISTORY_STORAGE_KEY = 'wow-forever-name-generator.history.v1'
 export const MAX_HISTORY_ENTRIES = 20
 
 export interface RollHistoryEntry extends Character, CharacterName {
@@ -43,25 +44,35 @@ export function parseHistory(raw: string | null): RollHistoryEntry[] {
   }
 }
 
-export function loadHistory(storage: StorageReader | undefined = getBrowserStorage()): RollHistoryEntry[] {
+export function loadHistory(
+  storage: StorageReader | undefined = getBrowserStorage(),
+  key = HISTORY_STORAGE_KEY,
+): RollHistoryEntry[] {
   try {
-    return parseHistory(storage?.getItem(HISTORY_STORAGE_KEY) ?? null)
+    return parseHistory(storage?.getItem(key) ?? null)
   } catch {
     return []
   }
 }
 
-export function persistHistory(history: readonly RollHistoryEntry[], storage: StorageWriter | undefined = getBrowserStorage()): void {
+export function persistHistory(
+  history: readonly RollHistoryEntry[],
+  storage: StorageWriter | undefined = getBrowserStorage(),
+  key = HISTORY_STORAGE_KEY,
+): void {
   try {
-    storage?.setItem(HISTORY_STORAGE_KEY, JSON.stringify(history.slice(0, MAX_HISTORY_ENTRIES)))
+    storage?.setItem(key, JSON.stringify(history.slice(0, MAX_HISTORY_ENTRIES)))
   } catch {
     // Storage can be unavailable or full; rolling remains usable in memory.
   }
 }
 
-export function clearPersistedHistory(storage: StorageWriter | undefined = getBrowserStorage()): void {
+export function clearPersistedHistory(
+  storage: StorageWriter | undefined = getBrowserStorage(),
+  key = HISTORY_STORAGE_KEY,
+): void {
   try {
-    storage?.removeItem(HISTORY_STORAGE_KEY)
+    storage?.removeItem(key)
   } catch {
     // Clearing the in-memory history still works if storage is unavailable.
   }

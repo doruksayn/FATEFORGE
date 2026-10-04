@@ -7,7 +7,7 @@ import { RANDOM, type Character, type CharacterFilters, type RandomOption } from
 import { RecentRolls } from './RecentRolls.tsx'
 import { SelectionControl } from './SelectionControl.tsx'
 import { clampHistoryPage } from '../logic/historyPagination.ts'
-import { createHistoryEntry, prependHistoryEntry, removeHistoryEntry, updateHistoryName, type RollHistoryEntry } from '../storage/history.ts'
+import { clearPersistedHistory, createHistoryEntry, loadHistory, NAME_HISTORY_STORAGE_KEY, persistHistory, prependHistoryEntry, removeHistoryEntry, updateHistoryName, type RollHistoryEntry } from '../storage/history.ts'
 
 export function NameGeneratorPage() {
   const [race, setRace] = useState<RandomOption<Character['race']>>(RANDOM)
@@ -16,7 +16,7 @@ export function NameGeneratorPage() {
   const [faction, setFaction] = useState<RandomOption<Character['faction']>>(RANDOM)
   const [character, setCharacter] = useState<Character | null>(null)
   const [name, setName] = useState<CharacterName | null>(null)
-  const [history, setHistory] = useState<RollHistoryEntry[]>([])
+  const [history, setHistory] = useState<RollHistoryEntry[]>(() => loadHistory(undefined, NAME_HISTORY_STORAGE_KEY))
   const [historyPage, setHistoryPage] = useState(1)
   const [currentHistoryId, setCurrentHistoryId] = useState<string | null>(null)
   const [restoreFrame, setRestoreFrame] = useState(0)
@@ -34,14 +34,20 @@ export function NameGeneratorPage() {
     setCharacter(result)
     setName(nextName)
     setCurrentHistoryId(entry.id)
-    setHistory((entries) => prependHistoryEntry(entries, entry))
+    const nextHistory = prependHistoryEntry(history, entry)
+    setHistory(nextHistory)
+    persistHistory(nextHistory, undefined, NAME_HISTORY_STORAGE_KEY)
     setHistoryPage(1)
   }
 
   function updateName(nextName: CharacterName) {
     setName(nextName)
     const id = currentHistoryId
-    if (id) setHistory((entries) => updateHistoryName(entries, id, nextName))
+    if (id) {
+      const nextHistory = updateHistoryName(history, id, nextName)
+      setHistory(nextHistory)
+      persistHistory(nextHistory, undefined, NAME_HISTORY_STORAGE_KEY)
+    }
   }
 
   function updateSelection(key: 'faction' | 'race' | 'class', value: RandomOption<Character['faction' | 'race' | 'class']>) {
@@ -76,6 +82,7 @@ export function NameGeneratorPage() {
 
   function clearHistory() {
     setHistory([])
+    clearPersistedHistory(undefined, NAME_HISTORY_STORAGE_KEY)
     setHistoryPage(1)
     setCurrentHistoryId(null)
   }
@@ -84,6 +91,7 @@ export function NameGeneratorPage() {
     if (currentHistoryId === id) setCurrentHistoryId(null)
     const next = removeHistoryEntry(history, id)
     setHistory(next)
+    persistHistory(next, undefined, NAME_HISTORY_STORAGE_KEY)
     setHistoryPage((page) => clampHistoryPage(page, next.length))
   }
 

@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import {
   HISTORY_STORAGE_KEY,
+  NAME_HISTORY_STORAGE_KEY,
   MAX_HISTORY_ENTRIES,
   clearPersistedHistory,
   loadHistory,
@@ -82,5 +83,20 @@ describe('roll history', () => {
     clearPersistedHistory(storage)
     assert.equal(storage.getItem(HISTORY_STORAGE_KEY), null)
     assert.deepEqual(loadHistory(storage), [])
+  })
+
+  it('stores Name Generator history separately from Randomizer history', () => {
+    const storage = fakeStorage()
+    const rolls = [entry(1)]
+    const names = [entry(2)]
+    persistHistory(rolls, storage)
+    persistHistory(names, storage, NAME_HISTORY_STORAGE_KEY)
+
+    assert.deepEqual(loadHistory(storage), rolls)
+    assert.deepEqual(loadHistory(storage, NAME_HISTORY_STORAGE_KEY), names)
+
+    clearPersistedHistory(storage, NAME_HISTORY_STORAGE_KEY)
+    assert.deepEqual(loadHistory(storage), rolls)
+    assert.deepEqual(loadHistory(storage, NAME_HISTORY_STORAGE_KEY), [])
   })
 })

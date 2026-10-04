@@ -20,7 +20,7 @@ FATEFORGE is a two-tool character companion for WoW Forever. Use the Character R
 - Generate a first name and surname using the selected Race and Gender. Class provides context but does not affect name style.
 - Reroll either part of the name or both while keeping the character context.
 - Browse, select, remove, and page through recent names. Selecting a name restores its result and selector values.
-- Recent Names are kept in memory for the current session and are not saved to `localStorage`.
+- Recent Names are saved in browser `localStorage` under a separate key from Recent Rolls.
 
 ## Navigation
 
@@ -60,6 +60,8 @@ npm run build
 - `src/components/` — tool pages and shared interface components
 
 All character and name generation runs locally in the browser. FATEFORGE has no backend or external name-generation service.
+
+Character Randomizer history uses `wow-forever-roulette.history.v1`; Name Generator history uses `wow-forever-name-generator.history.v1`. Clearing one history does not clear the other.
 
 ## Deployment
 
