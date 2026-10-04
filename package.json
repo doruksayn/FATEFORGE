@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "test": "node --experimental-strip-types --test src/logic/randomizer.test.ts src/logic/nameGenerator.test.ts src/logic/historyPagination.test.ts src/storage/history.test.ts",
     "lint": "oxlint",
     "preview": "vite preview"
   },
