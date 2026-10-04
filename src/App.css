@@ -1,0 +1,66 @@
+#root {
+  min-height: 100vh;
+}
+
+.app-shell {
+  box-sizing: border-box;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.25rem;
+  text-align: center;
+}
+
+.eyebrow {
+  margin: 0 0 0.75rem;
+  color: #c5a45e;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+h1 {
+  max-width: 42rem;
+  margin: 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(2rem, 6vw, 3.75rem);
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.intro {
+  max-width: 36rem;
+  margin: 1.25rem 0 2.5rem;
+  color: #b9b6b0;
+  line-height: 1.7;
+}
+
+.placeholder {
+  width: min(100%, 34rem);
+  box-sizing: border-box;
+  padding: 2.25rem 1.5rem;
+  border: 1px solid #403b32;
+  border-radius: 0.75rem;
+  background: #171819;
+}
+
+.placeholder-icon {
+  color: #c5a45e;
+  font-size: 1.75rem;
+}
+
+.placeholder h2 {
+  margin: 0.75rem 0 0.5rem;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.placeholder p {
+  margin: 0;
+  color: #9f9c96;
+  line-height: 1.6;
+}
