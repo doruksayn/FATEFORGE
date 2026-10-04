@@ -2,6 +2,8 @@
 
 FATEFORGE is a two-tool character companion for WoW Forever. Use the Character Randomizer to roll a valid character, or shape a character context and forge a name with the Name Generator.
 
+Live site: https://doruksayn.github.io/FATEFORGE/
+
 ## Tools
 
 ### Character Randomizer
