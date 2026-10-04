@@ -1312,6 +1312,13 @@
   }
 }
 
+@media (max-width: 768px) {
+  .main-content {
+    background-color: #101216;
+    background-image: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
