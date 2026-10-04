@@ -31,6 +31,10 @@ import {
 import './App.css'
 
 const WOW_FOREVER_OFFICIAL_URL = 'https://worldofwarcraft.blizzard.com/en-us/forever'
+const MAIN_BACKGROUND_URL = new URL(
+  `${import.meta.env.BASE_URL}backgrounds/main-bg.jpg`,
+  document.baseURI,
+).href
 const socialLinks = [
   { name: 'Kick', href: 'https://kick.com/doruksayn', image: 'kick.png' },
   { name: 'YouTube', href: 'https://www.youtube.com/@doruksayn', image: 'youtube.png' },
@@ -273,7 +277,7 @@ function App() {
     </header>
     <main
       className="main-content"
-      style={{ '--main-bg-image': `url("${import.meta.env.BASE_URL}backgrounds/main-bg.jpg")` } as CSSProperties}
+      style={{ '--main-bg-image': `url("${MAIN_BACKGROUND_URL}")` } as CSSProperties}
     >
     <div className="app-shell">
       <div className="generator-layout">
