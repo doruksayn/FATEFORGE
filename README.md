@@ -1,35 +1,46 @@
 # FATEFORGE
 
-A WoW Forever character randomizer for choosing a faction, race, class, gender, and original fantasy name.
+FATEFORGE is a two-tool character companion for WoW Forever. Use the Character Randomizer to roll a valid character, or shape a character context and forge a name with the Name Generator.
 
-## Features
+## Tools
 
-- Random or manually locked faction, race, class, and gender selections
-- Dependency-aware generation of valid WoW Forever character combinations
-- Animated character roulette
-- Local class icons
-- Race- and gender-aware fantasy name generator with separate name rerolls
-- Persistent Recent Rolls history saved in the browser
-- Paginated history with individual and full-history deletion
-- Responsive desktop and mobile layout
+### Character Randomizer
 
-## Tech Stack
+- Roll a character with random or fixed Faction, Race, Class, and Gender choices.
+- Browse valid combinations through linked selectors. Incompatible choices are cleared automatically.
+- Watch the character roulette reveal its result.
+- Reroll the first name, surname, or full name without changing the character.
+- Review, remove, and page through the latest 20 rolls.
+- Recent Rolls are saved in browser `localStorage`.
 
-- React
-- TypeScript
-- Vite
-- CSS
-- Browser `localStorage`
-- GitHub Pages
+### Name Generator
 
-## Running Locally
+- Choose Random or fixed Faction, Race, Class, and Gender.
+- Race and Class options follow the same compatibility data as the Character Randomizer.
+- Generate a first name and surname using the selected Race and Gender. Class provides context but does not affect name style.
+- Reroll either part of the name or both while keeping the character context.
+- Browse, select, remove, and page through recent names. Selecting a name restores its result and selector values.
+- Recent Names are kept in memory for the current session and are not saved to `localStorage`.
+
+## Navigation
+
+The tools use lightweight hash navigation and need no routing dependency:
+
+- `#/character` — Character Randomizer
+- `#/names` — Name Generator
+
+The current tool is preserved when the page is refreshed. Empty and unknown hashes default to the Character Randomizer. Browser Back and Forward move between tools.
+
+## Development
+
+Requirements: Node.js and npm.
 
 ```bash
 npm install
 npm run dev
 ```
 
-## Quality Checks
+Useful project checks:
 
 ```bash
 npm test
@@ -37,16 +48,23 @@ npm run lint
 npm run build
 ```
 
+`npm run preview` serves the production build locally after `npm run build`.
+
+## Project Structure
+
+- `src/data/compatibility.ts` — faction, race, and class combinations
+- `src/data/names.ts` — local race and gender name pools
+- `src/logic/randomizer.ts` — compatibility queries and character generation
+- `src/logic/nameGenerator.ts` — first-name and surname generation
+- `src/storage/history.ts` — validated Character Randomizer history storage
+- `src/components/` — tool pages and shared interface components
+
+All character and name generation runs locally in the browser. FATEFORGE has no backend or external name-generation service.
+
 ## Deployment
 
-GitHub Actions builds and deploys the `main` branch to GitHub Pages. Enable **Settings → Pages → Build and deployment → Source → GitHub Actions** in the repository. A manual deployment can also be started from the Actions tab.
-
-## Data and Compatibility
-
-Faction, race, and class compatibility data is maintained locally in the project. Update it when WoW Forever's playable combinations change. The name generator uses local race- and gender-specific name pools.
-
-Roll history is stored in this browser under the versioned key `wow-forever-roulette.history.v1`. It is not synced between browsers or devices.
+GitHub Actions builds and deploys the `main` branch to GitHub Pages. In the repository settings, select **Settings → Pages → Build and deployment → GitHub Actions** as the publishing source.
 
 ## Disclaimer
 
-This is an unofficial fan project. World of Warcraft and related assets are property of Blizzard Entertainment. FATEFORGE is not affiliated with, sponsored by, or endorsed by Blizzard Entertainment.
+FATEFORGE is an unofficial fan project. World of Warcraft and related assets are property of Blizzard Entertainment. FATEFORGE is not affiliated with, sponsored by, or endorsed by Blizzard Entertainment.

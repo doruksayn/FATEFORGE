@@ -21,6 +21,11 @@ function assertGenerates(filters: CharacterFilters, expected: CharacterFilters):
 describe('compatibility queries', () => {
   it('resolves Horde + Paladin to Undead', () => {
     assert.deepEqual(getValidRaces({ faction: 'Horde', class: 'Paladin' }), ['Undead'])
+    assert.deepEqual(getValidRaces({ class: 'Paladin' }), ['Human', 'Dwarf', 'Undead'])
+  })
+
+  it('filters to every valid Druid race, including Skyborne variants', () => {
+    assert.deepEqual(getValidRaces({ class: 'Druid' }), ['Night Elf', 'High Order Skyborne', 'Tauren', 'Windshaper Skyborne'])
   })
 
   it('resolves Night Elf to Alliance', () => {

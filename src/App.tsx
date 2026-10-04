@@ -11,7 +11,6 @@ import {
   RANDOM,
   type Character,
   type CharacterSelection,
-  type RandomOption,
 } from './types/character.ts'
 import { ClassIcon } from './components/ClassIcon.tsx'
 import { RecentRolls } from './components/RecentRolls.tsx'
@@ -29,6 +28,9 @@ import {
   type RollHistoryEntry,
 } from './storage/history.ts'
 import './App.css'
+import { NameGeneratorPage } from './components/NameGeneratorPage.tsx'
+import { getToolFromHash } from './logic/toolRoute.ts'
+import { SelectionControl } from './components/SelectionControl.tsx'
 
 const WOW_FOREVER_OFFICIAL_URL = 'https://worldofwarcraft.blizzard.com/en-us/forever'
 const MAIN_BACKGROUND_URL = new URL(
@@ -50,49 +52,8 @@ const initialSelection: CharacterSelection = {
 
 const rouletteDelays = [55, 70, 85, 110, 145, 190, 245, 340] as const
 
-interface SelectionControlProps<T extends string> {
-  id: string
-  label: string
-  value: RandomOption<T>
-  options: readonly T[]
-  disabled: boolean
-  onChange: (value: RandomOption<T>) => void
-}
-
-function SelectionControl<T extends string>({
-  id,
-  label,
-  value,
-  options,
-  disabled,
-  onChange,
-}: SelectionControlProps<T>) {
-  const isRandom = value === RANDOM
-
-  return (
-    <label className={`selection-control${isRandom ? ' is-random' : ' is-locked'}`} htmlFor={id}>
-      <span className="selection-label">{label}</span>
-      <span className="select-wrap">
-        <select
-          id={id}
-          value={value}
-          disabled={disabled}
-          aria-describedby={`${id}-state`}
-          onChange={(event) => onChange(event.currentTarget.value as RandomOption<T>)}
-        >
-          <option value={RANDOM}>Random</option>
-          {options.map((option) => <option key={option} value={option}>{option}</option>)}
-        </select>
-      </span>
-      <span className="selection-state" id={`${id}-state`}>
-        <span aria-hidden="true">{isRandom ? '◌' : '◆'}</span>
-        {isRandom ? 'Chosen at random' : 'Locked'}
-      </span>
-    </label>
-  )
-}
-
 function App() {
+  const [activeTool, setActiveTool] = useState(() => getToolFromHash(window.location.hash))
   const [logoFailed, setLogoFailed] = useState(false)
   const [selection, setSelection] = useState(initialSelection)
   const [result, setResult] = useState<Character | null>(null)
@@ -111,6 +72,17 @@ function App() {
   useEffect(() => () => {
     if (timerRef.current !== null) window.clearTimeout(timerRef.current)
     rollingRef.current = false
+  }, [])
+
+  useEffect(() => {
+    const syncHash = () => {
+      const tool = getToolFromHash(window.location.hash)
+      if (window.location.hash !== `#/${tool}`) window.history.replaceState(null, '', '#/character')
+      setActiveTool(tool)
+    }
+    window.addEventListener('hashchange', syncHash)
+    syncHash()
+    return () => window.removeEventListener('hashchange', syncHash)
   }, [])
 
   const validCombinations = getValidCombinations(selection)
@@ -252,34 +224,48 @@ function App() {
   const resultFactionClass = result
     ? ` result-card--${result.faction.toLowerCase()}`
     : ''
-  const resultClassName = `result-card${resultFactionClass}${rolling ? ' result-card--rolling' : ''}${isSettled ? ' result-card--settled' : ''}`
+  const resultClassName = `result-card${resultFactionClass}${result ? '' : ' result-card--empty'}${rolling ? ' result-card--rolling' : ''}${isSettled ? ' result-card--settled' : ''}`
 
   return (
     <>
     <header className="top-header" id="top">
       <div className="top-header-inner">
       <div className="masthead-brand">
-        {logoFailed ? (
-          <span className="brand-fallback">WOW FOREVER</span>
-        ) : (
-          <img
-            className="brand-logo"
-            src={import.meta.env.BASE_URL + 'branding/wow-forever-logo.png'}
-            alt="WoW Forever"
-            onError={() => setLogoFailed(true)}
-          />
-        )}
+        <a
+          className="masthead-logo-link"
+          href={window.location.href}
+          aria-label="Refresh this page"
+          onClick={(event) => { event.preventDefault(); window.location.reload() }}
+        >
+          {logoFailed ? (
+            <span className="brand-fallback">WOW FOREVER</span>
+          ) : (
+            <img
+              className="brand-logo"
+              src={import.meta.env.BASE_URL + 'branding/wow-forever-logo.png'}
+              alt="WoW Forever"
+              onError={() => setLogoFailed(true)}
+            />
+          )}
+        </a>
         <div className="masthead-title">
           <h1><a className="masthead-title-link" href="#top">FATEFORGE</a></h1>
         </div>
       </div>
+      <nav className="tool-nav" aria-label="FATEFORGE tools">
+        <a href="#/character" aria-current={activeTool === 'character' ? 'page' : undefined}>Character Randomizer</a>
+        <a href="#/names" aria-current={activeTool === 'names' ? 'page' : undefined}>Name Generator</a>
+      </nav>
       </div>
     </header>
     <main
       className="main-content"
       style={{ '--main-bg-image': `url("${MAIN_BACKGROUND_URL}")` } as CSSProperties}
     >
+    <div hidden={activeTool !== 'names'}><NameGeneratorPage /></div>
+    <div hidden={activeTool !== 'character'} className="character-tool">
     <div className="app-shell">
+      <div className="name-page-heading"><p className="section-kicker">WoW Forever Tools</p><h1>CHARACTER RANDOMIZER</h1><p>Choose your path and let fate decide.</p></div>
       <div className="generator-layout">
         <section className="selection-panel" aria-labelledby="selection-heading">
           <span className="card-edge-flow" aria-hidden="true" />
@@ -328,7 +314,7 @@ function App() {
           <p className="selection-note">
             {rolling
               ? 'Selections are held while the wheel turns.'
-              : 'Choose a value to lock it in. Leave it random to let fate decide.'}
+              : 'Faction, Race and Class options update to stay compatible. Leave choices Random to let fate decide.'}
           </p>
           <button
             className={`roll-button${rolling ? ' roll-button--rolling' : ''}`}
@@ -397,6 +383,7 @@ function App() {
             ? `${result.faction}, ${result.race}, ${result.class}, ${result.gender}.`
             : ''}
       </p>
+    </div>
     </div>
     </main>
     <footer className="site-footer">
