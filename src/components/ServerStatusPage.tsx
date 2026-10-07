@@ -15,7 +15,7 @@ export function ServerStatusPage() {
 
   useEffect(() => {
     let live = true
-    const load = () => fetch(`${API_URL}?t=${Date.now()}`).then((response) => {
+    const load = () => fetch(`${API_URL}?t=${Date.now()}`, { cache: 'no-store', signal: AbortSignal.timeout(10_000) }).then((response) => {
       if (!response.ok) throw new Error('Status unavailable')
       return response.json() as Promise<Status>
     }).then((next) => {
@@ -74,7 +74,7 @@ export function ServerStatusPage() {
             const ok = sample.login === 'online' && sample.realm === 'online'
             return <span key={sample.checkedAt} className={ok ? 'history-online' : 'history-offline'} title={`${new Date(sample.checkedAt).toLocaleString()}: ${ok ? 'Online' : 'Connection failed'}`} />
           })}
-          {!data?.history.length && <p>{error ? 'Status data has not been published yet.' : 'Waiting for the first check…'}</p>}
+          {!data?.history.length && <p>{error ? 'Could not load status data. Retrying…' : 'Waiting for the first check…'}</p>}
         </div>
         <div className="server-status-legend"><span><i className="history-online" />Online</span><span><i className="history-offline" />Connection failed</span></div>
         <p className="server-status-note">Checks whether each server accepts a network connection; this does not verify login or gameplay. Data refreshes every 5 minutes.</p>
@@ -89,7 +89,7 @@ export function ServerStatusPage() {
             <span><time dateTime={article.publishedAt}>{new Date(article.publishedAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}</time><strong>{article.title}</strong></span>
             <span aria-hidden="true">↗</span>
           </a>)}
-          {!data?.news?.length && <p className="official-news-empty">News feed is loading…</p>}
+          {!data?.news?.length && <p className="official-news-empty">{error ? 'Could not load news. Retrying…' : 'News feed is loading…'}</p>}
         </div>
       </section>
     </div>
