@@ -2,13 +2,16 @@ import { useEffect, useState } from 'react'
 
 type Check = { status: 'online' | 'offline'; host: string; port: number; latencyMs: number | null }
 type Sample = { checkedAt: string; login: Check['status']; realm: Check['status'] }
-type Status = { checkedAt: string; login: Check; realm: Check; history: Sample[] }
+type NewsArticle = { title: string; url: string; publishedAt: string }
+type Status = { checkedAt: string; login: Check; realm: Check; history: Sample[]; news?: NewsArticle[] }
 
 const API_URL = 'https://raw.githubusercontent.com/doruksayn/FATEFORGE/status-data/status.json'
+const ICY_VEINS_NEWS_URL = 'https://www.icy-veins.com/wow-forever/news/'
 
 export function ServerStatusPage() {
   const [data, setData] = useState<Status | null>(null)
   const [error, setError] = useState(false)
+  const [now, setNow] = useState(0)
 
   useEffect(() => {
     let live = true
@@ -16,15 +19,17 @@ export function ServerStatusPage() {
       if (!response.ok) throw new Error('Status unavailable')
       return response.json() as Promise<Status>
     }).then((next) => {
-      if (live) { setData(next); setError(false) }
+      if (live) { setData(next); setError(false); setNow(Date.now()) }
     }).catch(() => { if (live) setError(true) })
     void load()
-    const timer = window.setInterval(load, 60_000)
+    const timer = window.setInterval(() => { setNow(Date.now()); void load() }, 60_000)
     return () => { live = false; window.clearInterval(timer) }
   }, [])
 
-  const online = data?.login.status === 'online' && data.realm.status === 'online'
-  const statusLabel = !data ? (error ? 'Data unavailable' : 'Loading status…') : online ? 'All systems operational' : 'Service interruption detected'
+  const isStale = data ? !Number.isFinite(Date.parse(data.checkedAt)) || now - Date.parse(data.checkedAt) > 15 * 60_000 : false
+  const bothOnline = data?.login.status === 'online' && data.realm.status === 'online'
+  const status = !data ? error ? 'unavailable' : 'loading' : isStale ? 'stale' : bothOnline ? 'online' : data.login.status !== data.realm.status ? 'degraded' : 'offline'
+  const statusLabel = { unavailable: 'DATA UNAVAILABLE', loading: 'CHECKING…', stale: 'STALE', online: 'ONLINE', degraded: 'DEGRADED', offline: 'OFFLINE' }[status]
   const samples = (data?.history ?? []).slice(-288)
   const upCount = samples.filter((sample) => sample.login === 'online' && sample.realm === 'online').length
   let outages = 0
@@ -47,7 +52,7 @@ export function ServerStatusPage() {
         <p>Live connection checks for WoW Forever.</p>
       </div>
       <section className="server-status-card" aria-label="WoW Forever server status">
-        <div className={`server-status-summary${online ? ' is-online' : ''}`}>
+        <div className={`server-status-summary server-status-summary--${status}`}>
           <span className="server-status-indicator" aria-hidden="true" />
           <div><p className="section-kicker">Current status</p><h2>{statusLabel}</h2></div>
         </div>
@@ -74,13 +79,27 @@ export function ServerStatusPage() {
         <div className="server-status-legend"><span><i className="history-online" />Online</span><span><i className="history-offline" />Connection failed</span></div>
         <p className="server-status-note">Checks whether each server accepts a network connection; this does not verify login or gameplay. Data refreshes every 5 minutes.</p>
       </section>
+      <section className="official-news-section" aria-labelledby="official-news-heading">
+        <div className="official-news-heading">
+          <div><p className="section-kicker">Icy Veins · Community news</p><h2 id="official-news-heading">WoW: Forever News</h2></div>
+          <a href={ICY_VEINS_NEWS_URL} target="_blank" rel="noopener noreferrer">All news ↗</a>
+        </div>
+        <div className="official-news-list">
+          {(data?.news ?? []).map((article) => <a className="official-news-item" href={article.url} key={article.url} target="_blank" rel="noopener noreferrer">
+            <span><time dateTime={article.publishedAt}>{new Date(article.publishedAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}</time><strong>{article.title}</strong></span>
+            <span aria-hidden="true">↗</span>
+          </a>)}
+          {!data?.news?.length && <p className="official-news-empty">News feed is loading…</p>}
+        </div>
+      </section>
     </div>
   )
 }
 
 function StatusCheck({ title, check }: { title: string; check?: Check }) {
+  const description = title === 'Login Service' ? 'Battle.net sign-in' : 'WoW Forever game connection'
   return <div className="server-status-service">
-    <div><span className={`service-dot ${check?.status === 'online' ? 'is-online' : check ? 'is-offline' : ''}`} /><div><h3>{title}</h3><p>{check ? `${check.host}:${check.port}` : 'Awaiting first check'}</p></div></div>
+    <div><span className={`service-dot ${check?.status === 'online' ? 'is-online' : check ? 'is-offline' : ''}`} /><div><h3>{title}</h3><p>{description}</p></div></div>
     <strong>{check ? check.status === 'online' ? `Online · ${check.latencyMs} ms` : 'Offline' : 'Pending'}</strong>
   </div>
 }

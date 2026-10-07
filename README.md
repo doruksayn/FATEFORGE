@@ -61,6 +61,7 @@ Browse every current name in **[NAME_POOLS.md](./NAME_POOLS.md)**.
 
 - GitHub Actions checks the WoW Forever beta login service and game realm every five minutes.
 - The status page displays the latest connection results, 24-hour uptime, outage count, and check history.
+- WoW: Forever headlines are read from Icy Veins' World of Warcraft RSS feed and link to the original articles.
 - The monitor publishes its JSON data to the `status-data` branch; the static GitHub Pages app reads that public file.
 - Checks test whether a server accepts a network connection. They do not verify game login or gameplay.
 
@@ -86,7 +87,7 @@ npm run dev
 - **Compatibility:** shared race/class/faction rules in `src/data/compatibility.ts`.
 - **Names:** local pools and name generation; no backend, AI calls, or external naming service.
 - **History:** Character Randomizer uses `wow-forever-roulette.history.v1`; Name Generator uses `wow-forever-name-generator.history.v1`.
-- **Status monitor:** `.github/workflows/server-status.yml` runs `scripts/check-server-status.mjs` and updates `status-data/status.json` every five minutes.
+- **Status monitor:** `.github/workflows/server-status.yml` runs `scripts/check-server-status.mjs` and updates `status-data/status.json` every five minutes, including Icy Veins news headlines.
 
 ## Project map
 

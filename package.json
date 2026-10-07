@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "test": "node --experimental-strip-types --test src/logic/randomizer.test.ts src/logic/nameGenerator.test.ts src/logic/historyPagination.test.ts src/logic/toolRoute.test.ts src/storage/history.test.ts",
+    "test": "node --experimental-strip-types --test src/logic/randomizer.test.ts src/logic/nameGenerator.test.ts src/logic/historyPagination.test.ts src/logic/toolRoute.test.ts src/storage/history.test.ts scripts/icyVeinsNews.test.mjs",
     "lint": "oxlint",
     "preview": "vite preview"
   },
