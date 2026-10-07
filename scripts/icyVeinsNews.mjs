@@ -15,6 +15,7 @@ function readTag(xml, tag) {
 export function parseIcyVeinsNews(xml) {
   return [...xml.matchAll(/<item(?:\s[^>]*)?>([\s\S]*?)<\/item>/gi)]
     .map(([, item]) => ({ title: readTag(item, 'title'), url: readTag(item, 'link'), publishedAt: readTag(item, 'pubDate') }))
-    .filter((article) => /forever/i.test(article.title) && article.url.startsWith('https://www.icy-veins.com/'))
+    .filter((article) => article.url.startsWith('https://www.icy-veins.com/wow-forever/news/'))
+    .sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt))
     .slice(0, 8)
 }

@@ -6,7 +6,7 @@ const checks = {
   login: { host: 'test.actual.battle.net', port: 1119 },
   realm: { host: '66.40.176.157', port: 3724 },
 }
-const newsFeed = 'https://wp-prod.icy-veins.com/custom-rss/?category=wow'
+const newsFeed = 'https://wp-prod.icy-veins.com/custom-rss/?category=wow-forever'
 
 function probe({ host, port }) {
   return new Promise((resolve) => {

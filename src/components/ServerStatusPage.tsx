@@ -89,8 +89,7 @@ export function ServerStatusPage() {
         </div>
         <div className="official-news-list">
           {(data?.news ?? []).map((article) => <a className="official-news-item" href={article.url} key={article.url} target="_blank" rel="noopener noreferrer">
-            <span><time dateTime={article.publishedAt}>{new Date(article.publishedAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}</time><strong>{article.title}</strong></span>
-            <span aria-hidden="true">↗</span>
+            <span><time dateTime={article.publishedAt}>{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(article.publishedAt))}</time><strong>{article.title}</strong></span>
           </a>)}
           {!data?.news?.length && <p className="official-news-empty">{error ? 'Could not load news. Retrying…' : 'News feed is loading…'}</p>}
         </div>
