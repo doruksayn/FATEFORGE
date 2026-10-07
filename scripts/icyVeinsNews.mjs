@@ -16,10 +16,12 @@ export function parseIcyVeinsNews(xml) {
   return [...xml.matchAll(/<item(?:\s[^>]*)?>([\s\S]*?)<\/item>/gi)]
     .map(([, item]) => {
       const image = readTag(item, 'featured-image')
+      const description = readTag(item, 'description').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 320)
       return {
         title: readTag(item, 'title'),
         url: readTag(item, 'link'),
         publishedAt: readTag(item, 'pubDate'),
+        ...(description ? { description } : {}),
         ...(image.startsWith('https://wp.icy-veins.com/') ? { image } : {}),
       }
     })
