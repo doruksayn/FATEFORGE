@@ -987,13 +987,15 @@
 .server-status-metrics div { display: grid; gap: 0.35rem; padding: 0.8rem; border: 1px solid #343638; border-radius: 0.55rem; }
 .server-status-metrics span { color: #898783; font-size: 0.68rem; }
 .server-status-metrics strong { color: #e9e3d8; font-size: 1rem; font-weight: 500; }
-.server-history { display: flex; gap: 2px; min-height: 2rem; align-items: stretch; overflow: hidden; }
-.server-history > span { flex: 1 1 0; min-width: 2px; border-radius: 2px; background: #65c58a; }
+.server-history { display: flex; min-height: 2rem; align-items: stretch; overflow: hidden; }
+.server-history > span { flex: 1 1 0; min-width: 2px; background: #65c58a; }
+.server-history > span.history-degraded { background: #e0bf69; }
 .server-history > span.history-offline { background: #e26969; }
 .server-history > p { color: #898783; font-size: 0.75rem; }
 .server-status-legend { display: flex; gap: 1rem; margin-top: 0.7rem; }
 .server-status-legend span { display: flex; align-items: center; gap: 0.4rem; color: #898783; font-size: 0.68rem; }
 .server-status-legend i { width: 0.5rem; height: 0.5rem; border-radius: 2px; background: #65c58a; }
+.server-status-legend i.history-degraded { background: #e0bf69; }
 .server-status-legend i.history-offline { background: #e26969; }
 
 .server-status-note {

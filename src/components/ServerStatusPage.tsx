@@ -72,12 +72,14 @@ export function ServerStatusPage() {
         </div>
         <div className="server-history" role="img" aria-label="Connection history over the last 24 hours">
           {samples.map((sample) => {
-            const ok = sample.login === 'online' && sample.realm === 'online'
-            return <span key={sample.checkedAt} className={ok ? 'history-online' : 'history-offline'} title={`${new Date(sample.checkedAt).toLocaleString()}: ${ok ? 'Online' : 'Connection failed'}`} />
+            const state = sample.login === 'online' && sample.realm === 'online'
+              ? 'online'
+              : sample.login === 'offline' && sample.realm === 'offline' ? 'offline' : 'degraded'
+            return <span key={sample.checkedAt} className={`history-${state}`} title={`${new Date(sample.checkedAt).toLocaleString()}: ${state}`} />
           })}
           {!data?.history.length && <p>{error ? 'Could not load status data. Retrying…' : 'Waiting for the first check…'}</p>}
         </div>
-        <div className="server-status-legend"><span><i className="history-online" />Online</span><span><i className="history-offline" />Connection failed</span></div>
+        <div className="server-status-legend"><span><i className="history-online" />Online</span><span><i className="history-degraded" />Degraded</span><span><i className="history-offline" />Offline</span></div>
         <p className="server-status-note">Checks whether each server accepts a network connection; this does not verify login or gameplay. Data refreshes every 5 minutes.</p>
       </section>
       <section className="official-news-section" aria-labelledby="official-news-heading">
