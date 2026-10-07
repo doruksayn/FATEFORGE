@@ -22,8 +22,9 @@ export function ServerStatusPage() {
       if (live) { setData(next); setError(false); setNow(Date.now()) }
     }).catch(() => { if (live) setError(true) })
     void load()
+    window.addEventListener('focus', load)
     const timer = window.setInterval(() => { setNow(Date.now()); void load() }, 60_000)
-    return () => { live = false; window.clearInterval(timer) }
+    return () => { live = false; window.removeEventListener('focus', load); window.clearInterval(timer) }
   }, [])
 
   const isStale = data ? !Number.isFinite(Date.parse(data.checkedAt)) || now - Date.parse(data.checkedAt) > 15 * 60_000 : false
