@@ -4,8 +4,8 @@
   </a>
 
   <h1>FATEFORGE</h1>
-  <p><strong>Two tools. A thousand possible adventures.</strong></p>
-  <p>Roll a character or forge a name for your next WoW Forever adventure.</p>
+  <p><strong>Three tools. A thousand possible adventures.</strong></p>
+  <p>Roll a character, forge a name, or check WoW Forever server connectivity.</p>
 
   <a href="https://doruksayn.github.io/FATEFORGE/">FATEFORGE</a>
   &nbsp;·&nbsp;
@@ -14,8 +14,8 @@
   <br />
 
   <a href="https://github.com/doruksayn/FATEFORGE/actions/workflows/deploy.yml"><img src="https://github.com/doruksayn/FATEFORGE/actions/workflows/deploy.yml/badge.svg" alt="GitHub Pages deployment status" /></a>
-  <img src="https://img.shields.io/badge/tools-2-9b8250" alt="Two tools" />
-  <img src="https://img.shields.io/badge/generation-local-536b59" alt="Runs locally" />
+  <img src="https://img.shields.io/badge/tools-3-9b8250" alt="Three tools" />
+  <img src="https://img.shields.io/badge/status-checks-every_5_minutes-536b59" alt="Status checks every five minutes" />
 </div>
 
 ## Choose your path
@@ -24,8 +24,9 @@
 |---|---|---|
 | **Character Randomizer** | Roll a compatible faction, race, class, gender, and name. | [`#/character`](https://doruksayn.github.io/FATEFORGE/#/character) |
 | **Name Generator** | Choose a character context and generate or reroll a name. | [`#/names`](https://doruksayn.github.io/FATEFORGE/#/names) |
+| **Server Status** | Check login and game realm connectivity, uptime, and recent history. | [`#/status`](https://doruksayn.github.io/FATEFORGE/#/status) |
 
-Both tools use the same Faction, Race, and Class compatibility data. Their recent histories are independent and saved separately in your browser.
+The character tools use the same Faction, Race, and Class compatibility data. Their recent histories are independent and saved separately in your browser.
 
 ## Features
 
@@ -56,6 +57,13 @@ Enable **Class-Influenced Surnames** in either tool to give surnames a class fla
 
 Browse every current name in **[NAME_POOLS.md](./NAME_POOLS.md)**.
 
+### Server Status
+
+- GitHub Actions checks the WoW Forever beta login service and game realm every five minutes.
+- The status page displays the latest connection results, 24-hour uptime, outage count, and check history.
+- The monitor publishes its JSON data to the `status-data` branch; the static GitHub Pages app reads that public file.
+- Checks test whether a server accepts a network connection. They do not verify game login or gameplay.
+
 ## Run locally
 
 Requires Node.js and npm.
@@ -74,10 +82,11 @@ npm run dev
 
 ## How it works
 
-- **Navigation:** `#/character` and `#/names`; browser Back/Forward and refresh preserve the selected tool.
+- **Navigation:** `#/character`, `#/names`, and `#/status`; browser Back/Forward and refresh preserve the selected tool.
 - **Compatibility:** shared race/class/faction rules in `src/data/compatibility.ts`.
 - **Names:** local pools and name generation; no backend, AI calls, or external naming service.
 - **History:** Character Randomizer uses `wow-forever-roulette.history.v1`; Name Generator uses `wow-forever-name-generator.history.v1`.
+- **Status monitor:** `.github/workflows/server-status.yml` runs `scripts/check-server-status.mjs` and updates `status-data/status.json` every five minutes.
 
 ## Project map
 

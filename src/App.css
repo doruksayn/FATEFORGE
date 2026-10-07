@@ -1,7 +1,8 @@
 #root {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .app-shell {
@@ -14,7 +15,7 @@
 .main-content {
   position: relative;
   display: flex;
-  flex: 1 0 auto;
+  min-height: 0;
   flex-direction: column;
   justify-content: center;
   width: 100%;
@@ -34,8 +35,10 @@
 .tool-view--inactive {
   position: absolute;
   top: 0;
+  bottom: 0;
   left: 0;
   width: 100%;
+  overflow: clip;
   visibility: hidden;
   pointer-events: none;
 }
@@ -928,6 +931,78 @@
   align-items: center;
 }
 
+.server-status-card {
+  padding: clamp(1rem, 2.5vw, 1.5rem);
+  border: 1px solid #343638;
+  border-radius: 0.85rem;
+  background: linear-gradient(145deg, rgb(24 26 29 / 92%), rgb(18 20 22 / 92%));
+}
+
+.server-status-summary,
+.server-status-service,
+.server-history-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.server-status-summary { justify-content: flex-start; padding-bottom: 1.25rem; }
+.server-status-summary h2,
+.server-history-heading h2 {
+  margin: 0.25rem 0 0;
+  color: #e9e3d8;
+  font: 500 1.35rem Georgia, 'Times New Roman', serif;
+}
+
+.server-status-indicator,
+.service-dot {
+  flex: 0 0 auto;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+  background: #777;
+}
+
+.server-status-indicator.is-online,
+.server-status-summary.is-online .server-status-indicator,
+.service-dot.is-online { background: #65c58a; box-shadow: 0 0 0.8rem rgb(101 197 138 / 45%); }
+.service-dot.is-offline { background: #e26969; }
+.server-status-services { border-top: 1px solid #343638; }
+.server-status-service { padding: 1rem 0; border-bottom: 1px solid #343638; }
+.server-status-service > div { display: flex; align-items: center; gap: 0.75rem; }
+.server-status-service h3 { margin: 0; color: #e9e3d8; font-size: 0.9rem; font-weight: 600; }
+.server-status-service p,
+.server-history-heading > span { margin: 0.25rem 0 0; color: #898783; font-size: 0.7rem; }
+.server-status-service strong { color: #bdb8ad; font-size: 0.75rem; font-weight: 500; }
+.server-history-heading { margin: 1.25rem 0 0.75rem; }
+.server-status-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin: 1rem 0; }
+.server-status-metrics div { display: grid; gap: 0.35rem; padding: 0.8rem; border: 1px solid #343638; border-radius: 0.55rem; }
+.server-status-metrics span { color: #898783; font-size: 0.68rem; }
+.server-status-metrics strong { color: #e9e3d8; font-size: 1rem; font-weight: 500; }
+.server-history { display: flex; gap: 2px; min-height: 2rem; align-items: stretch; overflow: hidden; }
+.server-history > span { flex: 1 1 0; min-width: 2px; border-radius: 2px; background: #65c58a; }
+.server-history > span.history-offline { background: #e26969; }
+.server-history > p { color: #898783; font-size: 0.75rem; }
+.server-status-legend { display: flex; gap: 1rem; margin-top: 0.7rem; }
+.server-status-legend span { display: flex; align-items: center; gap: 0.4rem; color: #898783; font-size: 0.68rem; }
+.server-status-legend i { width: 0.5rem; height: 0.5rem; border-radius: 2px; background: #65c58a; }
+.server-status-legend i.history-offline { background: #e26969; }
+
+.server-status-note {
+  margin: 1rem 0 0;
+  color: #898783;
+  font-size: 0.72rem;
+}
+
+@media (max-width: 520px) {
+  .server-status-service { align-items: flex-start; }
+  .server-status-service strong { text-align: right; }
+  .server-status-metrics { gap: 0.4rem; }
+  .server-status-metrics div { padding: 0.65rem 0.5rem; }
+  .server-status-metrics strong { font-size: 0.88rem; }
+}
+
 .history-heading {
   display: flex;
   align-items: flex-start;
@@ -1356,8 +1431,8 @@
     padding-bottom: 0.55rem;
   }
 
-  .tool-nav { width: 100%; justify-content: center; margin-left: 0; }
-  .tool-nav a { min-height: 2.75rem; }
+  .tool-nav { display: grid; flex: 0 0 100%; width: 100%; min-width: 0; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.3rem; margin-left: 0; }
+  .tool-nav a { min-width: 0; min-height: 2.75rem; justify-content: center; padding: 0.35rem 0.3rem; line-height: 1.2; text-align: center; }
   .clear-history-button { min-height: 2.75rem; }
   .history-pagination button { min-height: 2.75rem; }
   .history-heading-hint { min-height: 2.1rem; }

@@ -1,0 +1,36 @@
+name: Check WoW Forever server status
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: server-status
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Read previous status
+        run: |
+          git fetch origin status-data || true
+          git show origin/status-data:status.json > previous.json 2>/dev/null || true
+      - name: Probe servers
+        run: node scripts/check-server-status.mjs previous.json status.json
+      - name: Publish status API
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout --orphan status-data
+          git rm -rf .
+          git add status.json
+          git commit -m "Update server status data"
+          git push origin status-data --force

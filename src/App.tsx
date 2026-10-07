@@ -31,6 +31,7 @@ import './App.css'
 import { NameGeneratorPage } from './components/NameGeneratorPage.tsx'
 import { getToolFromHash } from './logic/toolRoute.ts'
 import { SelectionControl } from './components/SelectionControl.tsx'
+import { ServerStatusPage } from './components/ServerStatusPage.tsx'
 
 const WOW_FOREVER_OFFICIAL_URL = 'https://worldofwarcraft.blizzard.com/en-us/forever'
 const MAIN_BACKGROUND_URL = new URL(
@@ -256,6 +257,7 @@ function App() {
       <nav className="tool-nav" aria-label="FATEFORGE tools">
         <a href="#/character" aria-current={activeTool === 'character' ? 'page' : undefined}>Character Randomizer</a>
         <a href="#/names" aria-current={activeTool === 'names' ? 'page' : undefined}>Name Generator</a>
+        <a href="#/status" aria-current={activeTool === 'status' ? 'page' : undefined}>Server Status</a>
       </nav>
       </div>
     </header>
@@ -264,6 +266,7 @@ function App() {
       style={{ '--main-bg-image': `url("${MAIN_BACKGROUND_URL}")` } as CSSProperties}
     >
     <div className={activeTool === 'names' ? 'tool-view' : 'tool-view tool-view--inactive'} aria-hidden={activeTool !== 'names'} inert={activeTool !== 'names'}><NameGeneratorPage /></div>
+    {activeTool === 'status' && <div className="tool-view"><ServerStatusPage /></div>}
     <div className={`${activeTool === 'character' ? 'tool-view character-tool' : 'tool-view character-tool tool-view--inactive'}`} aria-hidden={activeTool !== 'character'} inert={activeTool !== 'character'}>
     <div className="app-shell">
       <div className="name-page-heading"><p className="section-kicker">WoW Forever Tools</p><h1>CHARACTER RANDOMIZER</h1><p>Choose your path and let fate decide.</p></div>
