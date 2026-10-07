@@ -14,7 +14,15 @@ function readTag(xml, tag) {
 
 export function parseIcyVeinsNews(xml) {
   return [...xml.matchAll(/<item(?:\s[^>]*)?>([\s\S]*?)<\/item>/gi)]
-    .map(([, item]) => ({ title: readTag(item, 'title'), url: readTag(item, 'link'), publishedAt: readTag(item, 'pubDate') }))
+    .map(([, item]) => {
+      const image = readTag(item, 'featured-image')
+      return {
+        title: readTag(item, 'title'),
+        url: readTag(item, 'link'),
+        publishedAt: readTag(item, 'pubDate'),
+        image: image.startsWith('https://wp.icy-veins.com/') ? image : '',
+      }
+    })
     .filter((article) => article.url.startsWith('https://www.icy-veins.com/wow-forever/news/'))
     .sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt))
     .slice(0, 8)

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 type Check = { status: 'online' | 'offline'; host: string; port: number; latencyMs: number | null }
 type Sample = { checkedAt: string; login: Check['status']; realm: Check['status'] }
-type NewsArticle = { title: string; url: string; publishedAt: string }
+type NewsArticle = { title: string; url: string; publishedAt: string; image?: string }
 type Status = { checkedAt: string; login: Check; realm: Check; history: Sample[]; news?: NewsArticle[] }
 
 const API_URL = 'https://raw.githubusercontent.com/doruksayn/FATEFORGE/status-data/status.json'
@@ -85,10 +85,11 @@ export function ServerStatusPage() {
       <section className="official-news-section" aria-labelledby="official-news-heading">
         <div className="official-news-heading">
           <div><p className="section-kicker">Icy Veins · Community news</p><h2 id="official-news-heading">WoW: Forever News</h2></div>
-          <a href={ICY_VEINS_NEWS_URL} target="_blank" rel="noopener noreferrer">All news ↗</a>
+          <a href={ICY_VEINS_NEWS_URL} target="_blank" rel="noopener noreferrer">All News</a>
         </div>
         <div className="official-news-list">
-          {(data?.news ?? []).map((article) => <a className="official-news-item" href={article.url} key={article.url} target="_blank" rel="noopener noreferrer">
+          {(data?.news ?? []).slice(0, 6).map((article) => <a className="official-news-item" href={article.url} key={article.url} target="_blank" rel="noopener noreferrer">
+            {article.image && <img src={article.image} alt="" loading="lazy" decoding="async" />}
             <span><time dateTime={article.publishedAt}>{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(article.publishedAt))}</time><strong>{article.title}</strong></span>
           </a>)}
           {!data?.news?.length && <p className="official-news-empty">{error ? 'Could not load news. Retrying…' : 'News feed is loading…'}</p>}
