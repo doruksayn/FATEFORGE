@@ -20,7 +20,7 @@ export function parseIcyVeinsNews(xml) {
         title: readTag(item, 'title'),
         url: readTag(item, 'link'),
         publishedAt: readTag(item, 'pubDate'),
-        image: image.startsWith('https://wp.icy-veins.com/') ? image : '',
+        ...(image.startsWith('https://wp.icy-veins.com/') ? { image } : {}),
       }
     })
     .filter((article) => article.url.startsWith('https://www.icy-veins.com/wow-forever/news/'))
