@@ -1007,8 +1007,8 @@
 .official-news-section { margin-top: 1.25rem; padding: clamp(1rem, 2.5vw, 1.5rem); border: 1px solid #343638; border-radius: 0.85rem; background: linear-gradient(145deg, rgb(24 26 29 / 92%), rgb(18 20 22 / 92%)); }
 .official-news-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 0.75rem; }
 .official-news-heading h2 { margin: 0.25rem 0 0; color: #e9e3d8; font: 500 1.35rem Georgia, 'Times New Roman', serif; }
-.official-news-heading > a { flex: 0 0 auto; color: #d7bc7a; font-size: 0.75rem; text-decoration: none; }
-.official-news-heading > a:hover { color: #f0d99e; }
+.official-news-heading > a { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 0.35rem; padding: 0.5rem 0.7rem; border: 1px solid rgb(215 188 122 / 35%); border-radius: 999px; background: rgb(215 188 122 / 7%); color: #d7bc7a; font-size: 0.72rem; font-weight: 600; text-decoration: none; transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease; }
+.official-news-heading > a:hover { border-color: #d7bc7a; background: rgb(215 188 122 / 14%); color: #f0d99e; }
 .official-news-heading > a:focus-visible,
 .official-news-item:focus-visible { outline: 2px solid #d7bc7a; outline-offset: 3px; }
 .official-news-list { border-top: 1px solid #343638; }
