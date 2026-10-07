@@ -373,7 +373,7 @@ function App() {
           )}
         </section>
       </div>
-      <RecentRolls entries={history} page={historyPage} onPageChange={setHistoryPage} onClear={clearHistory} onRemove={removeHistory} />
+      <RecentRolls entries={history} page={historyPage} onPageChange={setHistoryPage} onClear={clearHistory} onRemove={removeHistory} hint="Remove individual rolls or clear the full history." />
       <p className="sr-only" role="status" aria-live="polite">
         {rolling
           ? 'The character roulette is in progress.'

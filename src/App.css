@@ -1360,15 +1360,13 @@
   .tool-nav a { min-height: 2.75rem; }
   .clear-history-button { min-height: 2.75rem; }
   .history-pagination button { min-height: 2.75rem; }
+  .history-heading-hint { min-height: 2.1rem; }
 
   .name-generator-shell .name-page-heading { margin-bottom: 0.9rem; }
   .name-generator-shell .generator-layout { gap: 0.85rem; }
   .name-generator-shell .selection-panel { padding: 1rem; }
   .name-generator-shell .name-selection-grid { gap: 0.65rem; }
   .name-generator-shell .selection-note { margin: 0.65rem 0; }
-  .name-generator-shell .name-result-card { min-height: 25rem; }
-  .name-generator-shell .name-result-card--empty { min-height: 19rem; }
-  .name-generator-shell .history-section { min-height: auto; }
   .name-generator-shell .name-actions button { min-height: 2.75rem; }
 
   .history-entry { padding-right: 2.9rem; }
@@ -1400,7 +1398,7 @@
   }
 
   .result-card {
-    min-height: 32rem;
+    min-height: 29.5rem;
   }
 
   .history-grid {
@@ -1465,7 +1463,7 @@
 
 @media (max-width: 960px) {
   .history-section {
-    min-height: 21.5rem;
+    min-height: 23.5rem;
   }
 
   .history-grid {
@@ -1483,11 +1481,11 @@
   }
 
   .result-card {
-    min-height: 34rem;
+    min-height: 32rem;
   }
 
   .history-section {
-    min-height: 31.5rem;
+    min-height: 34.5rem;
     padding: 0.8rem;
   }
 
@@ -1513,6 +1511,12 @@
   .class-medallion .class-icon {
     width: 2.25rem;
     height: 2.25rem;
+  }
+}
+
+@media (min-width: 421px) and (max-width: 480px) {
+  .history-section {
+    min-height: 34.5rem;
   }
 }
 
