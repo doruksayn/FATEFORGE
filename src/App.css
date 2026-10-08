@@ -988,7 +988,7 @@
 .server-status-metrics span { color: #898783; font-size: 0.68rem; }
 .server-status-metrics strong { color: #e9e3d8; font-size: 1rem; font-weight: 500; }
 .server-history { display: flex; min-height: 2rem; align-items: stretch; overflow: hidden; }
-.server-history > span { flex: 1 1 0; min-width: 2px; background: #65c58a; }
+.server-history > span { flex: 1 1 0; min-width: 0; background: #65c58a; }
 .server-history > span.history-degraded { background: #e0bf69; }
 .server-history > span.history-offline { background: #e26969; }
 .server-history > p { color: #898783; font-size: 0.75rem; }
