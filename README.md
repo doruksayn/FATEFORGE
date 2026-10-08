@@ -7,63 +7,32 @@
   <p><strong>Three tools. A thousand possible adventures.</strong></p>
   <p>Roll a character, forge a name, or check WoW Forever server connectivity.</p>
 
-  <a href="https://doruksayn.github.io/FATEFORGE/">FATEFORGE</a>
+  <a href="https://doruksayn.github.io/FATEFORGE/">Open FATEFORGE</a>
   &nbsp;·&nbsp;
   <a href="https://github.com/doruksayn/FATEFORGE">View source</a>
 
   <br />
 
   <a href="https://github.com/doruksayn/FATEFORGE/actions/workflows/deploy.yml"><img src="https://github.com/doruksayn/FATEFORGE/actions/workflows/deploy.yml/badge.svg" alt="GitHub Pages deployment status" /></a>
-  <img src="https://img.shields.io/badge/tools-3-9b8250" alt="Three tools" />
-  <img src="https://img.shields.io/badge/status-checks-every_5_minutes-536b59" alt="Status checks every five minutes" />
 </div>
 
-## Choose your path
+## Choose your tool
 
 | Tool | What it does | Open directly |
 |---|---|---|
-| **Character Randomizer** | Roll a compatible faction, race, class, gender, and name. | [`#/character`](https://doruksayn.github.io/FATEFORGE/#/character) |
-| **Name Generator** | Choose a character context and generate or reroll a name. | [`#/names`](https://doruksayn.github.io/FATEFORGE/#/names) |
-| **Server Status** | Check login and game realm connectivity, uptime, and recent history. | [`#/status`](https://doruksayn.github.io/FATEFORGE/#/status) |
+| **Character Randomizer** | Roll a compatible faction, race, class, gender, and character name. | [`#/character`](https://doruksayn.github.io/FATEFORGE/#/character) |
+| **Name Generator** | Choose a character context, generate a name, and reroll either name part or both. | [`#/names`](https://doruksayn.github.io/FATEFORGE/#/names) |
+| **Server Status** | See login and realm connectivity, recent uptime, and WoW: Forever news. | [`#/status`](https://doruksayn.github.io/FATEFORGE/#/status) |
 
-The character tools use the same Faction, Race, and Class compatibility data. Their recent histories are independent and saved separately in your browser.
+Faction, race, and class choices stay within valid WoW Forever combinations. Both character tools let you browse, restore, remove, and page through up to 20 recent results; each tool keeps its own history in your browser.
 
-## Features
+### Class-influenced surnames
 
-### ⚔️ Character Randomizer
+Enable this option in either character tool to give surnames a class flavor. It uses a matching Race/Class surname pool for 35% of surname rolls. See all current pools in **[NAME_POOLS.md](./NAME_POOLS.md)**.
 
-- Choose fixed or random Faction, Race, Class, and Gender options.
-- Follow the roulette as it reveals a valid character.
-- Reroll the first name, surname, or full name while keeping the character.
-- Browse, restore, remove, and page through the latest 20 rolls.
+### Server status data
 
-### ✨ Name Generator
-
-- Generate names for a selected or randomized character context.
-- Race and Class choices stay within valid WoW Forever combinations.
-- Reroll either name part or the full name without changing the context.
-- Browse, restore, remove, and page through Recent Names.
-
-### Class-Influenced Surnames
-
-Enable **Class-Influenced Surnames** in either tool to give surnames a class flavor. With the option on, 35% of surname rolls draw from the selected Race/Class pool; the other 65% use that Race’s general pool. First names continue to use Race and Gender.
-
-| Pool | Entries |
-|---|---:|
-| First names (Race + Gender) | 480 |
-| Race surnames | 240 |
-| Class-influenced surnames | 336 |
-| **Total** | **1,056** |
-
-Browse every current name in **[NAME_POOLS.md](./NAME_POOLS.md)**.
-
-### Server Status
-
-- GitHub Actions checks the WoW Forever beta login service and game realm every five minutes.
-- The status page displays the latest connection results, 24-hour uptime, outage count, and check history.
-- WoW: Forever headlines are read from Icy Veins' World of Warcraft RSS feed and link to the original articles.
-- The monitor publishes its JSON data to the `status-data` branch; the static GitHub Pages app reads that public file.
-- Checks test whether a server accepts a network connection. They do not verify game login or gameplay.
+GitHub Actions checks the login service and game realm every five minutes. The page shows the latest result and the last 24 hours of history. These checks only confirm that each server accepts a network connection; they do not verify sign-in or gameplay. News headlines come from Icy Veins and link to the original articles.
 
 ## Run locally
 
@@ -76,32 +45,16 @@ npm run dev
 
 | Command | Purpose |
 |---|---|
-| `npm test` | Run the logic and storage tests |
+| `npm test` | Run logic, storage, and news parser tests |
 | `npm run lint` | Check the code with Oxlint |
 | `npm run build` | Type-check and create a production build |
 | `npm run preview` | Preview the production build locally |
 
-## How it works
-
-- **Navigation:** `#/character`, `#/names`, and `#/status`; browser Back/Forward and refresh preserve the selected tool.
-- **Compatibility:** shared race/class/faction rules in `src/data/compatibility.ts`.
-- **Names:** local pools and name generation; no backend, AI calls, or external naming service.
-- **History:** Character Randomizer uses `wow-forever-roulette.history.v1`; Name Generator uses `wow-forever-name-generator.history.v1`.
-- **Status monitor:** `.github/workflows/server-status.yml` runs `scripts/check-server-status.mjs` and updates `status-data/status.json` every five minutes, including Icy Veins news headlines.
-
-## Project map
-
-| Path | Contents |
-|---|---|
-| `src/data/` | Compatibility rules and name pools |
-| `src/logic/` | Randomizer, navigation, and name-generation logic |
-| `src/components/` | Name Generator, history, icons, and shared controls |
-| `src/storage/` | Validated, separate browser history storage |
-| `public/` | WoW Forever branding, class icons, and background art |
+The character tools run in the browser and need no application backend. Recent names are stored separately in browser storage. Server status is read from the public `status-data` branch; GitHub Actions maintains that data and fetches the Icy Veins feed.
 
 ## Deployment
 
-The `main` branch deploys to [GitHub Pages](https://doruksayn.github.io/FATEFORGE/) through [GitHub Actions](https://github.com/doruksayn/FATEFORGE/actions/workflows/deploy.yml). For a fresh setup, choose **Settings → Pages → Build and deployment → GitHub Actions** as the publishing source.
+Pushing to `main` builds and deploys the site to [GitHub Pages](https://doruksayn.github.io/FATEFORGE/) through [GitHub Actions](https://github.com/doruksayn/FATEFORGE/actions/workflows/deploy.yml). For a fresh setup, select **Settings → Pages → Build and deployment → GitHub Actions** as the publishing source.
 
 ## Disclaimer
 
