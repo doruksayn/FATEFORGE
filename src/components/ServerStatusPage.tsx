@@ -103,6 +103,6 @@ function StatusCheck({ title, check }: { title: string; check?: Check }) {
   const description = title === 'Login Service' ? 'Battle.net sign-in' : 'WoW Forever game connection'
   return <div className="server-status-service">
     <div><span className={`service-dot ${check?.status === 'online' ? 'is-online' : check ? 'is-offline' : ''}`} /><div><h3>{title}</h3><p>{description}</p></div></div>
-    <strong>{check ? check.status === 'online' ? `Online · ${check.latencyMs} ms` : 'Offline' : 'Pending'}</strong>
+    <strong>{check ? check.status === 'online' ? check.latencyMs === null ? 'Online' : `Online · ${check.latencyMs} ms` : 'Offline' : 'Pending'}</strong>
   </div>
 }

@@ -4,8 +4,9 @@ import { parseIcyVeinsNews } from './icyVeinsNews.mjs'
 
 const checks = {
   login: { host: 'test.actual.battle.net', port: 1119 },
-  realm: { host: '66.40.176.157', port: 3724 },
+  realm: { hosts: ['66.40.176.157', '66.40.178.99', '66.40.179.77'], port: 3724 },
 }
+const realmStatusUrl = 'https://wowforeverstatus.com/status'
 const newsFeed = 'https://wp-prod.icy-veins.com/custom-rss/?category=wow-forever'
 
 function probe({ host, port }) {
@@ -35,14 +36,33 @@ if (previousPath) {
   } catch {}
 }
 
-const [login, realm, news] = await Promise.all([
+const [login, realmChecks, news] = await Promise.all([
   probe(checks.login),
-  probe(checks.realm),
+  Promise.all(checks.realm.hosts.map((host) => probe({ host, port: checks.realm.port }))),
   fetch(newsFeed, { signal: AbortSignal.timeout(10000) })
     .then((response) => response.ok ? response.text() : Promise.reject(new Error('News feed unavailable')))
     .then(parseIcyVeinsNews)
     .catch(() => []),
 ])
+const realm = realmChecks.find((check) => check.status === 'online') ?? realmChecks[0]
+// shortcut: probes the three currently published realm IPs; refresh when a complete, reliable host list is available.
+// shortcut: trusts a fresh third-party playable-session report when all direct probes fail; replace when Blizzard publishes an official health endpoint.
+if (realm.status === 'offline') {
+  try {
+    const response = await fetch(realmStatusUrl, { signal: AbortSignal.timeout(5000) })
+    if (response.ok) {
+      const report = await response.json()
+      const reportAge = Date.now() - Date.parse(report.checkedAt)
+      if (report.status === 'online' && report.statusDetail === 'playable' &&
+          report.realmConnection === 'connected' && report.sessionComplete === true &&
+          report.dataFreshness === 'fresh' && report.dataAgeSeconds <= 15 * 60 &&
+          Number.isFinite(reportAge) && reportAge >= 0 && reportAge <= 15 * 60_000) {
+        realm.status = 'online'
+        realm.latencyMs = null
+      }
+    }
+  } catch {}
+}
 const checkedAt = new Date().toISOString()
 history = history.filter((sample) => Date.parse(sample.checkedAt) >= Date.now() - 7 * 24 * 60 * 60 * 1000)
 history.push({ checkedAt, login: login.status, realm: realm.status })
