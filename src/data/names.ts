@@ -76,7 +76,7 @@ export const namesByRace: Record<Race, RaceNames> = {
 export const classSurnamesByCombination = Object.fromEntries(
   validCombinations.map(({ race, class: characterClass }) => [
     `${race}|${characterClass}`,
-    classEpithets[characterClass].map((epithet, index) => `${namesByRace[race].surnames[index]} ${epithet}`),
+    classEpithets[characterClass],
   ]),
 ) as Record<string, readonly string[]>
 

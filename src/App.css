@@ -828,6 +828,11 @@
   animation: name-reveal 160ms ease-out both;
 }
 
+.character-name .class-influenced-surname {
+  color: #e6bd62;
+  text-shadow: 0 0 12px rgb(230 189 98 / 28%);
+}
+
 .name-actions {
   display: flex;
   flex-wrap: wrap;

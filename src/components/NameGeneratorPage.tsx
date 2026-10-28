@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { ClassIcon } from './ClassIcon.tsx'
 import { generateCharacter, getValidClasses, getValidCombinations, getValidFactions, getValidRaces } from '../logic/randomizer.ts'
-import { generateFirstName, generateFullName, generateSurname, type CharacterName } from '../logic/nameGenerator.ts'
+import { generateFirstName, generateFullName, generateSurname, isClassInfluencedSurname, type CharacterName } from '../logic/nameGenerator.ts'
 import { getRaceDisplayName } from '../presentation/raceName.ts'
 import { RANDOM, type Character, type CharacterFilters, type RandomOption } from '../types/character.ts'
 import { RecentRolls } from './RecentRolls.tsx'
@@ -132,7 +132,7 @@ export function NameGeneratorPage() {
             <div className="result-rule" aria-hidden="true">✦</div>
             <div className="class-medallion"><ClassIcon characterClass={character.class} /></div>
             <p className="result-class">{character.class}</p><p className="result-gender">{character.gender}</p>
-            <div className="name-section"><div className="name-divider" aria-hidden="true">✦</div><p className="name-label">Your name</p><p className="character-name"><span>{name.firstName}</span> <span>{name.surname}</span></p>
+            <div className="name-section"><div className="name-divider" aria-hidden="true">✦</div><p className="name-label">Your name</p><p className="character-name"><span>{name.firstName}</span> <span className={isClassInfluencedSurname(character.race, character.class, name.surname) ? 'class-influenced-surname' : undefined}>{name.surname}</span></p>
               <div className="name-actions">
                 <button type="button" onClick={rerollFirst}><span aria-hidden="true">↻</span>First Name</button>
                 <button type="button" onClick={rerollSurname}><span aria-hidden="true">↻</span>Surname</button>

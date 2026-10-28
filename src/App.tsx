@@ -15,7 +15,7 @@ import {
 import { ClassIcon } from './components/ClassIcon.tsx'
 import { RecentRolls } from './components/RecentRolls.tsx'
 import { getRaceDisplayName } from './presentation/raceName.ts'
-import { generateFirstName, generateFullName, generateSurname, type CharacterName } from './logic/nameGenerator.ts'
+import { generateFirstName, generateFullName, generateSurname, isClassInfluencedSurname, type CharacterName } from './logic/nameGenerator.ts'
 import { clampHistoryPage } from './logic/historyPagination.ts'
 import {
   clearPersistedHistory,
@@ -350,7 +350,7 @@ function App() {
                   <div className="name-divider" aria-hidden="true"><span>✦</span></div>
                   <p className="name-label">Character name</p>
                   <p className="character-name" aria-live="polite">
-                    <span>{characterName.firstName}</span> <span>{characterName.surname}</span>
+                    <span>{characterName.firstName}</span> <span className={isClassInfluencedSurname(result.race, result.class, characterName.surname) ? 'class-influenced-surname' : undefined}>{characterName.surname}</span>
                   </p>
                   <div className="name-actions">
                     <button type="button" onClick={rerollFirstName} disabled={rolling}><span aria-hidden="true">↻</span>First Name</button>

@@ -27,6 +27,10 @@ export function generateSurname(race: Race, { characterClass, classInfluence = f
     : pick(namesByRace[race].surnames, random)
 }
 
+export function isClassInfluencedSurname(race: Race, characterClass: Class, surname: string): boolean {
+  return classSurnamesByCombination[`${race}|${characterClass}`]?.includes(surname) ?? false
+}
+
 export function generateFullName(race: Race, gender: Gender, options: NameGenerationOptions = {}): CharacterName {
   const { random = Math.random } = options
   return { firstName: generateFirstName(race, gender, random), surname: generateSurname(race, { ...options, random }) }
